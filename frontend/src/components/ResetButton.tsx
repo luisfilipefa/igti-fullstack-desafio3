@@ -6,11 +6,13 @@ import { Flex } from "@chakra-ui/layout";
 interface ResetButtonProps {
   setCurrentYear: Dispatch<SetStateAction<string>>;
   setCurrentMonth: Dispatch<SetStateAction<number>>;
+  setMaxItems: Dispatch<SetStateAction<number>>;
 }
 
 export default function ResetButton({
   setCurrentYear,
   setCurrentMonth,
+  setMaxItems,
 }: ResetButtonProps) {
   return (
     <Flex align="center" justifyContent="center">
@@ -21,6 +23,7 @@ export default function ResetButton({
         onClick={() => {
           setCurrentMonth(0);
           setCurrentYear("");
+          setMaxItems(5);
         }}
       >
         Resetar filtro

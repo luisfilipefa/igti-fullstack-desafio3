@@ -4,6 +4,7 @@ import * as api from "./api/api";
 
 import {
   Box,
+  Button,
   ChakraProvider,
   Flex,
   Spinner,
@@ -38,18 +39,8 @@ function App() {
   const [currentYear, setCurrentYear] = useState("");
   const [currentMonth, setCurrentMonth] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await api.getTodos();
-      setTodos(response);
-    };
-
-    setTimeout(() => {}, 2000);
-
-    fetchData();
-    setIsLoading(!isLoading);
-  }, []);
+  const [statusChanged, setStatusChanged] = useState(false);
+  const [maxItems, setMaxItems] = useState(5);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -58,12 +49,13 @@ function App() {
     };
 
     fetchData();
-    setIsLoading(!isLoading);
-  }, [currentYear, currentMonth]);
+    setIsLoading(false);
+  }, [currentYear, currentMonth, statusChanged]);
 
   const handleCheckTodo = async (todo: Todo) => {
     try {
       const response = await api.updateTodo(todo);
+      setStatusChanged(!statusChanged);
       console.log(response);
 
       if (!todo.done) {
@@ -76,11 +68,6 @@ function App() {
 
   return (
     <ChakraProvider theme={theme}>
-      {isLoading && (
-        <Flex align="center" justifyContent="center" w="100%" h="100%">
-          <Spinner />
-        </Flex>
-      )}
       <ToastContainer
         position="top-right"
         autoClose={3000}
@@ -98,6 +85,7 @@ function App() {
           <ResetButton
             setCurrentYear={setCurrentYear}
             setCurrentMonth={setCurrentMonth}
+            setMaxItems={setMaxItems}
           />
           <Years
             years={years}
@@ -112,13 +100,20 @@ function App() {
           <Summary tasksSummary={tasksSummary} />
         </Stack>
         <TodoList>
-          {todos.map((todo) => (
-            <TodoItem
-              key={todo.id}
-              todo={todo}
-              handleCheckTodo={handleCheckTodo}
-            />
-          ))}
+          {todos.map((todo, index) => {
+            if (index <= maxItems) {
+              return (
+                <TodoItem
+                  key={todo.id}
+                  todo={todo}
+                  handleCheckTodo={handleCheckTodo}
+                />
+              );
+            }
+          })}
+          <Button colorScheme="pink" onClick={() => setMaxItems(maxItems + 10)}>
+            Carregar mais todos...
+          </Button>
         </TodoList>
       </Box>
       <ToastContainer />
