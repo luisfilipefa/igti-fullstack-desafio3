@@ -2,15 +2,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import * as api from "./api/api";
 
-import {
-  Box,
-  Button,
-  ChakraProvider,
-  Flex,
-  Spinner,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Button, ChakraProvider, Stack, Text } from "@chakra-ui/react";
 import { ToastContainer, toast } from "react-toastify";
 import { useEffect, useState } from "react";
 
@@ -109,6 +101,9 @@ function App() {
                   handleCheckTodo={handleCheckTodo}
                 />
               );
+            } else {
+              // eslint-disable-next-line array-callback-return
+              return;
             }
           })}
           <Button colorScheme="pink" onClick={() => setMaxItems(maxItems + 10)}>
